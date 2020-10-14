@@ -26,6 +26,7 @@ import io.github.thebusybiscuit.slimefun4.core.attributes.DamageableItem;
 import io.github.thebusybiscuit.slimefun4.core.handlers.BlockBreakHandler;
 import io.github.thebusybiscuit.slimefun4.implementation.SlimefunPlugin;
 import io.github.thebusybiscuit.slimefun4.implementation.items.SimpleSlimefunItem;
+import io.github.thebusybiscuit.slimefun4.implementation.items.cargo.AbstractFilterNode;
 import io.github.thebusybiscuit.slimefun4.implementation.items.cargo.AdvancedCargoOutputNode;
 import io.github.thebusybiscuit.slimefun4.implementation.items.cargo.CargoInputNode;
 import io.github.thebusybiscuit.slimefun4.implementation.items.cargo.CargoOutputNode;
@@ -240,7 +241,7 @@ public class CargoCopier extends SimpleSlimefunItem<ItemInteractHandler> impleme
             }
 
             try {
-                AdvancedCargoOutputNode advOutputNode = (AdvancedCargoOutputNode) node;
+                AbstractFilterNode advOutputNode = (AbstractFilterNode) node;
                 if (advOutput == null) {
                     advOutput = advOutputNode.getClass().getDeclaredMethod("updateBlockMenu", BlockMenu.class, Block.class);
                     advOutput.setAccessible(true);
