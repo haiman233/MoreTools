@@ -56,6 +56,10 @@ public class CargoCopier extends SimpleSlimefunItem<ItemInteractHandler> impleme
     private final HashMap<UUID, Long> lastUses = new HashMap<>();
     private final NamespacedKey copy = new NamespacedKey(MoreTools.getInstance(), "cargo-settings");
 
+    private Method input = null;
+    private Method output = null;
+    private Method advOutput = null;
+
     public CargoCopier(@NotNull Category category, @NotNull SlimefunItemStack item, @NotNull RecipeType recipeType, ItemStack[] recipe) {
         super(category, item, recipeType, recipe);
 
@@ -195,9 +199,11 @@ public class CargoCopier extends SimpleSlimefunItem<ItemInteractHandler> impleme
 
             try {
                 CargoInputNode inputNode = (CargoInputNode) node;
-                Method method = inputNode.getClass().getDeclaredMethod("updateBlockMenu", BlockMenu.class, Block.class);
-                method.setAccessible(true);
-                method.invoke(inputNode, BlockStorage.getInventory(b), b);
+                if (input == null) {
+                    input = inputNode.getClass().getDeclaredMethod("updateBlockMenu", BlockMenu.class, Block.class);
+                    input.setAccessible(true);
+                }
+                input.invoke(inputNode, BlockStorage.getInventory(b), b);
 
             } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
                 MoreTools.getInstance().getLogger().log(Level.SEVERE, "Could not find 'updateBlockMenu' method.");
@@ -213,10 +219,12 @@ public class CargoCopier extends SimpleSlimefunItem<ItemInteractHandler> impleme
             }
 
             try {
-                CargoOutputNode inputNode = (CargoOutputNode) node;
-                Method method = inputNode.getClass().getDeclaredMethod("updateBlockMenu", BlockMenu.class, Block.class);
-                method.setAccessible(true);
-                method.invoke(inputNode, BlockStorage.getInventory(b), b);
+                CargoOutputNode outputNode = (CargoOutputNode) node;
+                if (output == null) {
+                    output = outputNode.getClass().getDeclaredMethod("updateBlockMenu", BlockMenu.class, Block.class);
+                    output.setAccessible(true);
+                }
+                output.invoke(outputNode, BlockStorage.getInventory(b), b);
 
             } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
                 MoreTools.getInstance().getLogger().log(Level.SEVERE, "Could not find 'updateBlockMenu' method.");
@@ -232,10 +240,12 @@ public class CargoCopier extends SimpleSlimefunItem<ItemInteractHandler> impleme
             }
 
             try {
-                AdvancedCargoOutputNode inputNode = (AdvancedCargoOutputNode) node;
-                Method method = inputNode.getClass().getDeclaredMethod("updateBlockMenu", BlockMenu.class, Block.class);
-                method.setAccessible(true);
-                method.invoke(inputNode, BlockStorage.getInventory(b), b);
+                AdvancedCargoOutputNode advOutputNode = (AdvancedCargoOutputNode) node;
+                if (advOutput == null) {
+                    advOutput = advOutputNode.getClass().getDeclaredMethod("updateBlockMenu", BlockMenu.class, Block.class);
+                    advOutput.setAccessible(true);
+                }
+                advOutput.invoke(advOutputNode, BlockStorage.getInventory(b), b);
 
             } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
                 MoreTools.getInstance().getLogger().log(Level.SEVERE, "Could not find 'updateBlockMenu' method.");
