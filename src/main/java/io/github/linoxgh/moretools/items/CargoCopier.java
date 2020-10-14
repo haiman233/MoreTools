@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Level;
 
-import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -35,6 +34,7 @@ import me.mrCookieSlime.Slimefun.Objects.Category;
 import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SlimefunItem;
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
 import me.mrCookieSlime.Slimefun.api.SlimefunItemStack;
+import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import me.mrCookieSlime.Slimefun.cscorelib2.protection.ProtectableAction;
 
 import org.jetbrains.annotations.NotNull;
@@ -196,6 +196,7 @@ public class CargoCopier extends SimpleSlimefunItem<ItemInteractHandler> impleme
             try {
                 CargoInputNode inputNode = (CargoInputNode) node;
                 Method method = inputNode.getClass().getDeclaredMethod("updateBlockMenu", BlockMenu.class, Block.class);
+                method.setAccessible(true);
                 method.invoke(inputNode, BlockStorage.getInventory(b), b);
 
             } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
@@ -214,6 +215,7 @@ public class CargoCopier extends SimpleSlimefunItem<ItemInteractHandler> impleme
             try {
                 CargoOutputNode inputNode = (CargoOutputNode) node;
                 Method method = inputNode.getClass().getDeclaredMethod("updateBlockMenu", BlockMenu.class, Block.class);
+                method.setAccessible(true);
                 method.invoke(inputNode, BlockStorage.getInventory(b), b);
 
             } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
@@ -232,6 +234,7 @@ public class CargoCopier extends SimpleSlimefunItem<ItemInteractHandler> impleme
             try {
                 AdvancedCargoOutputNode inputNode = (AdvancedCargoOutputNode) node;
                 Method method = inputNode.getClass().getDeclaredMethod("updateBlockMenu", BlockMenu.class, Block.class);
+                method.setAccessible(true);
                 method.invoke(inputNode, BlockStorage.getInventory(b), b);
 
             } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
