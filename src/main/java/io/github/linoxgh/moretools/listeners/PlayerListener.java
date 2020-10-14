@@ -1,6 +1,7 @@
 package io.github.linoxgh.moretools.listeners;
 
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 
@@ -16,7 +17,7 @@ public class PlayerListener implements Listener {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
     
-    @EventHandler
+    @EventHandler( priority = EventPriority.LOW, ignoreCancelled = true)
     public void onPlayerInteract(PlayerInteractEvent e) {
         SlimefunItem sfItem = SlimefunItem.getByItem(e.getItem());
         if (sfItem != null && Slimefun.isEnabled(e.getPlayer(), sfItem, true)) {

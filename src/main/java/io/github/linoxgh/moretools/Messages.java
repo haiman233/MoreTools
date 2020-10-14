@@ -9,7 +9,15 @@ public enum Messages {
     CRESCENTHAMMER_DISMANTLEFAIL("items.crescent-hammer.dismantle-fail"),
     CRESCENTHAMMER_ROTATEFAIL("items.crescent-hammer.rotate-fail"),
     CRESCENTHAMMER_CHANNELCHANGEFAIL("items.crescent-hammer.channel-change-fail"),
-    CRESCENTHAMMER_CHANNELCHANGESUCCESS("items.crescent-hammer.channel-change-success");
+    CRESCENTHAMMER_CHANNELCHANGESUCCESS("items.crescent-hammer.channel-change-success"),
+
+    CARGOCOPIER_BLOCKBREAKING("items.cargo-copier.block-breaking"),
+    CARGOCOPIER_COOLDOWN("items.cargo-copier.cooldown"),
+    CARGOCOPIER_WRONGBLOCK("items.cargo-copier.wrong-block"),
+    CARGOCOPIER_COPYFAIL("items.cargo-copier.copy-fail"),
+    CARGOCOPIER_SAVEFAIL("items.cargo-copier.save-fail"),
+    CARGOCOPIER_COPYSUCCESS("items.cargo-copier.copy-success"),
+    CARGOCOPIER_SAVESUCCESS("items.cargo-copier.save-success");
     
     private final String message;
     

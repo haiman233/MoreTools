@@ -4,12 +4,14 @@ import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 
+import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import io.github.linoxgh.moretools.items.CargoCopier;
 import io.github.linoxgh.moretools.items.CrescentHammer;
 import io.github.linoxgh.moretools.listeners.PlayerListener;
 
@@ -19,11 +21,12 @@ import io.github.thebusybiscuit.slimefun4.implementation.SlimefunItems;
 import me.mrCookieSlime.Slimefun.Lists.RecipeType;
 import me.mrCookieSlime.Slimefun.Objects.Category;
 import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SlimefunItem;
-import me.mrCookieSlime.Slimefun.api.SlimefunItemStack;
 import me.mrCookieSlime.Slimefun.bstats.bukkit.Metrics;
 import me.mrCookieSlime.Slimefun.cscorelib2.item.CustomItem;
 import me.mrCookieSlime.Slimefun.cscorelib2.updater.Updater;
 import me.mrCookieSlime.Slimefun.cscorelib2.updater.GitHubBuildsUpdater;
+
+import org.jetbrains.annotations.NotNull;
 
 public class MoreTools extends JavaPlugin implements SlimefunAddon {
 
@@ -50,7 +53,7 @@ public class MoreTools extends JavaPlugin implements SlimefunAddon {
             if (cfgVersion == null || !cfgVersion.equals(version)) {
             
                 getLogger().log(Level.WARNING, "Your config.yml file is outdated. Updating...");
-                
+
                 for (String key : defaultCfg.getKeys(true)) {
                     if (!cfg.contains(key, true)) {
                         if (debug) getLogger().log(Level.INFO, "Setting \"" + key + "\" to \"" + defaultCfg.get(key) + "\".");
@@ -107,16 +110,22 @@ public class MoreTools extends JavaPlugin implements SlimefunAddon {
             null, SlimefunItems.COPPER_INGOT, null,
             null, SlimefunItems.TIN_INGOT, null
         }).register(this);
-        
+
+        new CargoCopier(moreToolsCategory, Items.CARGO_COPIER, RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[] {
+            SlimefunItems.TIN_INGOT, SlimefunItems.GILDED_IRON, SlimefunItems.TIN_INGOT,
+            SlimefunItems.COBALT_INGOT, SlimefunItems.HARDENED_GLASS, SlimefunItems.COBALT_INGOT,
+            SlimefunItems.TIN_INGOT, new ItemStack(Material.PAPER), SlimefunItems.TIN_INGOT
+        }).register(this);
     }
     
     private void setupResearches() {
         if (debug) getLogger().log(Level.INFO, "Setting up researches...");
         
         registerResearch("crescent_hammer", 7501, "Not A Hammer", 15, Items.CRESCENT_HAMMER);
+        registerResearch("cargo-copier", 7502, "Hi-Tech Copier", 15, Items.CARGO_COPIER);
     }
     
-    private void registerResearch(String key, int id, String name, int defaultCost, ItemStack... items) {
+    private void registerResearch(@NotNull String key, int id, @NotNull String name, int defaultCost, @NotNull ItemStack... items) {
         Research research = new Research(new NamespacedKey(this, key), id, name, defaultCost);
         
         for (ItemStack item : items) {
@@ -129,16 +138,16 @@ public class MoreTools extends JavaPlugin implements SlimefunAddon {
     }
 
     @Override
-    public String getBugTrackerURL() {
+    public @NotNull String getBugTrackerURL() {
         return "https://github.com/LinoxGH/MoreTools/issues";
     }
 
     @Override
-    public JavaPlugin getJavaPlugin() {
+    public @NotNull JavaPlugin getJavaPlugin() {
         return this;
     }
     
-    public static MoreTools getInstance() {
+    public static @NotNull MoreTools getInstance() {
         return instance;
     }
     

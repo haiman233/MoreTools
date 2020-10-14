@@ -15,7 +15,8 @@ public class Items {
     
     // TOOLS
     public static final SlimefunItemStack CRESCENT_HAMMER = new SlimefunItemStack("CRESCENT_HAMMER", Material.IRON_HOE, "&bCrescent Hammer", "&7&oActually this is a wrench, really.", "", "&eLeft Click &7> Dismantles the machine.");
-    
+    public static final SlimefunItemStack CARGO_COPIER = new SlimefunItemStack("CARGO_COPIER", Material.MAP, "&bCargo Copier", "", "&eLeft Click &7> Copies the settings of the interacted cargo node.", "&eRight Click &7> Saves the settings to the interacted cargo node.");
+
     static {
         ItemMeta meta = CRESCENT_HAMMER.getItemMeta();
         List<String> lore = meta.getLore();

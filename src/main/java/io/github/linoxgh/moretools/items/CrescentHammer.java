@@ -12,7 +12,6 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.Directional;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -23,7 +22,6 @@ import io.github.linoxgh.moretools.handlers.ItemInteractHandler;
 import io.github.thebusybiscuit.slimefun4.core.attributes.DamageableItem;
 import io.github.thebusybiscuit.slimefun4.core.attributes.EnergyNetComponent;
 import io.github.thebusybiscuit.slimefun4.core.handlers.BlockBreakHandler;
-import io.github.thebusybiscuit.slimefun4.implementation.SlimefunItems;
 import io.github.thebusybiscuit.slimefun4.implementation.SlimefunPlugin;
 import io.github.thebusybiscuit.slimefun4.implementation.items.SimpleSlimefunItem;
 import io.github.thebusybiscuit.slimefun4.implementation.items.cargo.CargoManager;
@@ -41,6 +39,8 @@ import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import me.mrCookieSlime.Slimefun.cscorelib2.item.CustomItem;
 import me.mrCookieSlime.Slimefun.cscorelib2.materials.MaterialCollections;
 import me.mrCookieSlime.Slimefun.cscorelib2.protection.ProtectableAction;
+
+import org.jetbrains.annotations.NotNull;
 
 /**
  * A {@link CrescentHammer} is a {@link SlimefunItem} which allows you to dismantle placed machine blocks
@@ -66,7 +66,7 @@ public class CrescentHammer extends SimpleSlimefunItem<ItemInteractHandler> impl
     private final HashMap<UUID, Long> lastUses = new HashMap<>();
     private final HashMap<String, Integer> slotCurrents = new HashMap<>();
 
-    public CrescentHammer(Category category, SlimefunItemStack item, RecipeType recipeType, ItemStack[] recipe) {
+    public CrescentHammer(@NotNull Category category, @NotNull SlimefunItemStack item, @NotNull RecipeType recipeType, ItemStack[] recipe) {
         super(category, item, recipeType, recipe);
         
         FileConfiguration cfg = MoreTools.getInstance().getConfig();
@@ -84,9 +84,10 @@ public class CrescentHammer extends SimpleSlimefunItem<ItemInteractHandler> impl
     }
     
     @Override
-    public ItemInteractHandler getItemHandler() {
+    public @NotNull ItemInteractHandler getItemHandler() {
         return (e, sfItem) -> {
-            if (!sfItem.getID().equals(getID())) {
+            ItemStack item = e.getItem();
+            if (!sfItem.getID().equals(getID()) || item == null) {
                 return;
             }
             e.setCancelled(true);
@@ -101,7 +102,7 @@ public class CrescentHammer extends SimpleSlimefunItem<ItemInteractHandler> impl
                         if ((System.currentTimeMillis() - lastUse) < cooldown) {
                             p.sendMessage(
                                 Messages.CRESCENTHAMMER_COOLDOWN.getMessage().replaceAll(
-                                    "{left-cooldown}", 
+                                    "\\{left-cooldown}",
                                     String.valueOf(cooldown - (System.currentTimeMillis() - lastUse)))
                                 );
                             return;
@@ -122,7 +123,7 @@ public class CrescentHammer extends SimpleSlimefunItem<ItemInteractHandler> impl
                             if (p.isSneaking()) {
                                 alterChannel(b, p, 1);
                             } else {
-                                dismantleBlock(b, p, e.getItem());
+                                dismantleBlock(b, p, item);
                             }
                             break;
                         
@@ -131,11 +132,10 @@ public class CrescentHammer extends SimpleSlimefunItem<ItemInteractHandler> impl
                     }
                 }
             }
-            e.setCancelled(true);
         };
     }
     
-    private void alterChannel(Block b, Player p, int change) {
+    private void alterChannel(@NotNull Block b, @NotNull Player p, int change) {
     
         if (!channelChangeEnabled) {
             return;
@@ -183,7 +183,7 @@ public class CrescentHammer extends SimpleSlimefunItem<ItemInteractHandler> impl
         p.sendMessage(Messages.CRESCENTHAMMER_CHANNELCHANGEFAIL.getMessage());
     }
     
-    private void dismantleBlock(Block b, Player p, ItemStack item) {
+    private void dismantleBlock(@NotNull Block b, @NotNull Player p, @NotNull ItemStack item) {
         SlimefunItem sfItem = BlockStorage.check(b);
         if (sfItem != null) {
             if (sfItem instanceof EnergyNetComponent || sfItem instanceof EnergyRegulator ||
@@ -205,7 +205,7 @@ public class CrescentHammer extends SimpleSlimefunItem<ItemInteractHandler> impl
         p.sendMessage(Messages.CRESCENTHAMMER_DISMANTLEFAIL.getMessage());
     }
     
-    private void rotateBlock(Block b, Player p) {
+    private void rotateBlock(@NotNull Block b, @NotNull Player p) {
     
         if (!rotationEnabled) {
             return;
@@ -244,7 +244,7 @@ public class CrescentHammer extends SimpleSlimefunItem<ItemInteractHandler> impl
         p.sendMessage(Messages.CRESCENTHAMMER_ROTATEFAIL.getMessage());
     }
     
-    private BlockBreakHandler getBlockBreakHandler() {
+    private @NotNull BlockBreakHandler getBlockBreakHandler() {
         return new BlockBreakHandler() {
         
             @Override
