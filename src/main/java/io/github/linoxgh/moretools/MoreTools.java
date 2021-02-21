@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 
+import org.bstats.bukkit.Metrics;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -75,6 +76,9 @@ public class MoreTools extends JavaPlugin implements SlimefunAddon {
                 updater.start();
             }
         }
+      
+        if (debug) getLogger().log(Level.INFO, "Setting up metrics...");
+        Metrics metrics = new Metrics(this, 8780);
         
         if (debug) getLogger().log(Level.INFO, "Setting up event listeners...");
         new PlayerListener(this);
