@@ -62,10 +62,11 @@
         </dependency>
 
         <dependency>
-            <groupId>com.github.TheBusyBiscuit</groupId>
+            <groupId>com.github.Slimefun</groupId>
             <artifactId>Slimefun4</artifactId>
-            <version>RC-16</version>
-            <scope>provided</scope>
+            <version>4.8-UNOFFICIAL</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/libs/Slimefun v4.8-UNOFFICIAL.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>org.jetbrains</groupId>

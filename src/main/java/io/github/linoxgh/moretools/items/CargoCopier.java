@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Level;
 
+import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -25,6 +26,7 @@ import io.github.linoxgh.moretools.handlers.ItemInteractHandler;
 import io.github.thebusybiscuit.slimefun4.core.attributes.DamageableItem;
 import io.github.thebusybiscuit.slimefun4.core.handlers.BlockBreakHandler;
 import io.github.thebusybiscuit.slimefun4.implementation.SlimefunPlugin;
+import io.github.thebusybiscuit.slimefun4.implementation.handlers.SimpleBlockBreakHandler;
 import io.github.thebusybiscuit.slimefun4.implementation.items.SimpleSlimefunItem;
 import io.github.thebusybiscuit.slimefun4.implementation.items.cargo.AbstractFilterNode;
 import io.github.thebusybiscuit.slimefun4.implementation.items.cargo.AdvancedCargoOutputNode;
@@ -64,6 +66,7 @@ public class CargoCopier extends SimpleSlimefunItem<ItemInteractHandler> impleme
     public CargoCopier(@NotNull Category category, @NotNull SlimefunItemStack item, @NotNull RecipeType recipeType, ItemStack[] recipe) {
         super(category, item, recipeType, recipe);
 
+        addItemHandler(onBreak());
         FileConfiguration cfg = MoreTools.getInstance().getConfig();
         damageable = cfg.getBoolean("item-settings.cargo-copier.damageable");
         cooldown = cfg.getInt("item-settings.cargo-copier.cooldown");
@@ -161,7 +164,7 @@ public class CargoCopier extends SimpleSlimefunItem<ItemInteractHandler> impleme
         p.sendMessage(Messages.CARGOCOPIER_COPYSUCCESS.getMessage());
     }
 
-    private void saveCargoNode(@NotNull Block b, @NotNull Player p, @NotNull ItemStack item) {
+    private <AbstractFilterNode> void saveCargoNode(@NotNull Block b, @NotNull Player p, @NotNull ItemStack item) {
 
         ItemMeta meta = item.getItemMeta();
         if (meta == null) {
@@ -263,17 +266,14 @@ public class CargoCopier extends SimpleSlimefunItem<ItemInteractHandler> impleme
         p.sendMessage(Messages.CARGOCOPIER_SAVESUCCESS.getMessage());
     }
 
-    private @NotNull BlockBreakHandler getBlockBreakHandler() {
-        return new BlockBreakHandler() {
+    private BlockBreakHandler onBreak() {
+    	return new SimpleBlockBreakHandler() {
 
-            @Override
-            public boolean onBlockBreak(BlockBreakEvent e, ItemStack item, int fortune, List<ItemStack> drops) {
-                if (isItem(item)) {
-                    e.setCancelled(true);
-                    e.getPlayer().sendMessage(Messages.CARGOCOPIER_BLOCKBREAKING.getMessage());
-                    return true;
+    		public void onBlockBreak(Block b) {
+                if (isItem(getItem())) {
+                    Player p = Bukkit.getPlayer(UUID.fromString(BlockStorage.getLocationInfo(b.getLocation(), "owner")));
+                    p.sendMessage(Messages.CARGOCOPIER_BLOCKBREAKING.getMessage());
                 }
-                return false;
             }
 
             @Override
@@ -286,7 +286,7 @@ public class CargoCopier extends SimpleSlimefunItem<ItemInteractHandler> impleme
     @Override
     public void preRegister() {
         super.preRegister();
-        addItemHandler(getBlockBreakHandler());
+        addItemHandler(onBreak());
     }
 
     @Override
