@@ -29,6 +29,7 @@ import io.github.thebusybiscuit.slimefun4.implementation.items.cargo.ReactorAcce
 import io.github.thebusybiscuit.slimefun4.implementation.items.cargo.TrashCan;
 import io.github.thebusybiscuit.slimefun4.implementation.items.electric.EnergyRegulator;
 import io.github.thebusybiscuit.slimefun4.utils.ChestMenuUtils;
+import io.github.thebusybiscuit.slimefun4.utils.ColoredMaterial;
 import io.github.thebusybiscuit.slimefun4.utils.HeadTexture;
 import me.mrCookieSlime.Slimefun.Lists.RecipeType;
 import me.mrCookieSlime.Slimefun.Objects.Category;
@@ -37,7 +38,6 @@ import me.mrCookieSlime.Slimefun.api.BlockStorage;
 import me.mrCookieSlime.Slimefun.api.SlimefunItemStack;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import me.mrCookieSlime.Slimefun.cscorelib2.item.CustomItem;
-import me.mrCookieSlime.Slimefun.cscorelib2.materials.MaterialCollections;
 import me.mrCookieSlime.Slimefun.cscorelib2.protection.ProtectableAction;
 
 import org.jetbrains.annotations.NotNull;
@@ -54,7 +54,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class CrescentHammer extends SimpleSlimefunItem<ItemInteractHandler> implements DamageableItem {
 
-    private final boolean isChestTerminalInstalled = SlimefunPlugin.getThirdPartySupportService().isChestTerminalInstalled();
+    private final boolean isChestTerminalInstalled = SlimefunPlugin.getIntegrations().isChestTerminalInstalled();
     
     private final boolean damageable;
     private final boolean rotationEnabled;
@@ -101,8 +101,8 @@ public class CrescentHammer extends SimpleSlimefunItem<ItemInteractHandler> impl
                     if (lastUse != null) {
                         if ((System.currentTimeMillis() - lastUse) < cooldown) {
                             p.sendMessage(
-                                Messages.CRESCENTHAMMER_COOLDOWN.getMessage().replaceAll(
-                                    "\\{left-cooldown}",
+                                Messages.CRESCENTHAMMER_COOLDOWN.getMessage().replace(
+                                    "{left-cooldown}", 
                                     String.valueOf(cooldown - (System.currentTimeMillis() - lastUse)))
                                 );
                             return;
@@ -169,7 +169,7 @@ public class CrescentHammer extends SimpleSlimefunItem<ItemInteractHandler> impl
                     } else { 
                         menu.replaceExistingItem(
                             slotCurrent, 
-                            new CustomItem(MaterialCollections.getAllWoolColors().get(current), "&bChannel ID: &3" + (current + 1))
+                            new CustomItem(ColoredMaterial.WOOL.get(current), "&bChannel ID: &3" + (current + 1))
                         );
                     }
                     menu.addMenuClickHandler(slotCurrent, ChestMenuUtils.getEmptyClickHandler());
