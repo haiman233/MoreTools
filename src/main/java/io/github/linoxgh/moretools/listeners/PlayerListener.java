@@ -22,7 +22,7 @@ public class PlayerListener implements Listener {
         SlimefunItem sfItem = SlimefunItem.getByItem(e.getItem());
         if (sfItem != null && Slimefun.isEnabled(e.getPlayer(), sfItem, true)) {
             
-            if (Slimefun.hasUnlocked(e.getPlayer(), sfItem, true)) {
+            if (sfItem.canUse(e.getPlayer(), false)) {
                 sfItem.callItemHandler(ItemInteractHandler.class, handler -> handler.onInteract(e, sfItem));
             }
         }

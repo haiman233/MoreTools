@@ -3,7 +3,6 @@ package io.github.linoxgh.moretools.items;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Level;
@@ -13,7 +12,6 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
@@ -22,14 +20,11 @@ import org.bukkit.persistence.PersistentDataType;
 import io.github.linoxgh.moretools.Messages;
 import io.github.linoxgh.moretools.MoreTools;
 import io.github.linoxgh.moretools.handlers.ItemInteractHandler;
-
 import io.github.thebusybiscuit.slimefun4.core.attributes.DamageableItem;
 import io.github.thebusybiscuit.slimefun4.core.handlers.BlockBreakHandler;
 import io.github.thebusybiscuit.slimefun4.implementation.SlimefunPlugin;
 import io.github.thebusybiscuit.slimefun4.implementation.handlers.SimpleBlockBreakHandler;
 import io.github.thebusybiscuit.slimefun4.implementation.items.SimpleSlimefunItem;
-import io.github.thebusybiscuit.slimefun4.implementation.items.cargo.AbstractFilterNode;
-import io.github.thebusybiscuit.slimefun4.implementation.items.cargo.AdvancedCargoOutputNode;
 import io.github.thebusybiscuit.slimefun4.implementation.items.cargo.CargoInputNode;
 import io.github.thebusybiscuit.slimefun4.implementation.items.cargo.CargoOutputNode;
 import me.mrCookieSlime.Slimefun.Lists.RecipeType;
@@ -39,8 +34,6 @@ import me.mrCookieSlime.Slimefun.api.BlockStorage;
 import me.mrCookieSlime.Slimefun.api.SlimefunItemStack;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import me.mrCookieSlime.Slimefun.cscorelib2.protection.ProtectableAction;
-
-import org.jetbrains.annotations.NotNull;
 
 /**
  * A {@link CargoCopier} is a {@link SlimefunItem} which allows you to copy the settings of a cargo node
@@ -76,7 +69,7 @@ public class CargoCopier extends SimpleSlimefunItem<ItemInteractHandler> impleme
     public @NotNull ItemInteractHandler getItemHandler() {
         return (e, sfItem) -> {
             ItemStack item = e.getItem();
-            if (!sfItem.getID().equals(getID()) || item == null) {
+            if (!sfItem.getId().equals(getId()) || item == null) {
                 return;
             }
             e.setCancelled(true);
@@ -131,7 +124,7 @@ public class CargoCopier extends SimpleSlimefunItem<ItemInteractHandler> impleme
         }
 
         StringBuilder builder = new StringBuilder("{");
-        if (node.getID().equals("CARGO_NODE_INPUT")) {
+        if (node.getId().equals("CARGO_NODE_INPUT")) {
 
             builder.append("round-robin:").append(BlockStorage.getLocationInfo(b.getLocation(), "round-robin")).append("}/{");
             builder.append("frequency:").append(BlockStorage.getLocationInfo(b.getLocation(), "frequency")).append("}/{");
@@ -140,7 +133,7 @@ public class CargoCopier extends SimpleSlimefunItem<ItemInteractHandler> impleme
             builder.append("filter-durability:").append(BlockStorage.getLocationInfo(b.getLocation(), "filter-durability")).append("}/{");
             builder.append("index:").append(BlockStorage.getLocationInfo(b.getLocation(), "index")).append("}");
 
-        } else if (node.getID().equals("CARGO_NODE_OUTPUT_ADVANCED")) {
+        } else if (node.getId().equals("CARGO_NODE_OUTPUT_ADVANCED")) {
 
             builder.append("frequency:").append(BlockStorage.getLocationInfo(b.getLocation(), "frequency")).append("}/{");
             builder.append("filter-type:").append(BlockStorage.getLocationInfo(b.getLocation(), "filter-type")).append("}/{");
@@ -148,7 +141,7 @@ public class CargoCopier extends SimpleSlimefunItem<ItemInteractHandler> impleme
             builder.append("filter-durability:").append(BlockStorage.getLocationInfo(b.getLocation(), "filter-durability")).append("}/{");
             builder.append("index:").append(BlockStorage.getLocationInfo(b.getLocation(), "index")).append("}");
 
-        } else if (node.getID().equals("CARGO_NODE_OUTPUT")) {
+        } else if (node.getId().equals("CARGO_NODE_OUTPUT")) {
 
             builder.append("frequency:").append(BlockStorage.getLocationInfo(b.getLocation(), "frequency")).append("}");
 
@@ -195,7 +188,7 @@ public class CargoCopier extends SimpleSlimefunItem<ItemInteractHandler> impleme
             map.put(subSetting[0], subSetting[1]);
         }
 
-        if (node.getID().equals("CARGO_NODE_INPUT")) {
+        if (node.getId().equals("CARGO_NODE_INPUT")) {
 
             for (Map.Entry<String, String> entry : map.entrySet()) {
                 BlockStorage.addBlockInfo(b, entry.getKey(), entry.getValue());
@@ -216,7 +209,7 @@ public class CargoCopier extends SimpleSlimefunItem<ItemInteractHandler> impleme
                 e.printStackTrace();
             }
 
-        } else if (node.getID().equals("CARGO_NODE_OUTPUT")) {
+        } else if (node.getId().equals("CARGO_NODE_OUTPUT")) {
 
             for (Map.Entry<String, String> entry : map.entrySet()) {
                 BlockStorage.addBlockInfo(b, entry.getKey(), entry.getValue());
@@ -237,14 +230,14 @@ public class CargoCopier extends SimpleSlimefunItem<ItemInteractHandler> impleme
                 e.printStackTrace();
             }
 
-        } else if (node.getID().equals("CARGO_NODE_OUTPUT_ADVANCED")) {
+        } else if (node.getId().equals("CARGO_NODE_OUTPUT_ADVANCED")) {
 
             for (Map.Entry<String, String> entry : map.entrySet()) {
                 BlockStorage.addBlockInfo(b, entry.getKey(), entry.getValue());
             }
 
             try {
-                AbstractFilterNode advOutputNode = (AbstractFilterNode) node;
+                SlimefunItem advOutputNode =  node;
                 if (advOutput == null) {
                     advOutput = advOutputNode.getClass().getDeclaredMethod("updateBlockMenu", BlockMenu.class, Block.class);
                     advOutput.setAccessible(true);

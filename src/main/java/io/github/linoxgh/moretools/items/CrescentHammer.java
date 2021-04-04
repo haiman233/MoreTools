@@ -18,7 +18,6 @@ import org.bukkit.inventory.ItemStack;
 import io.github.linoxgh.moretools.Messages;
 import io.github.linoxgh.moretools.MoreTools;
 import io.github.linoxgh.moretools.handlers.ItemInteractHandler;
-
 import io.github.thebusybiscuit.slimefun4.core.attributes.DamageableItem;
 import io.github.thebusybiscuit.slimefun4.core.attributes.EnergyNetComponent;
 import io.github.thebusybiscuit.slimefun4.core.handlers.BlockBreakHandler;
@@ -39,8 +38,6 @@ import me.mrCookieSlime.Slimefun.api.SlimefunItemStack;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import me.mrCookieSlime.Slimefun.cscorelib2.item.CustomItem;
 import me.mrCookieSlime.Slimefun.cscorelib2.protection.ProtectableAction;
-
-import org.jetbrains.annotations.NotNull;
 
 /**
  * A {@link CrescentHammer} is a {@link SlimefunItem} which allows you to dismantle placed machine blocks
@@ -87,7 +84,7 @@ public class CrescentHammer extends SimpleSlimefunItem<ItemInteractHandler> impl
     public @NotNull ItemInteractHandler getItemHandler() {
         return (e, sfItem) -> {
             ItemStack item = e.getItem();
-            if (!sfItem.getID().equals(getID()) || item == null) {
+            if (!sfItem.getId().equals(getId()) || item == null) {
                 return;
             }
             e.setCancelled(true);
@@ -143,7 +140,7 @@ public class CrescentHammer extends SimpleSlimefunItem<ItemInteractHandler> impl
         
         SlimefunItem sfItem = BlockStorage.check(b);
         if (sfItem != null) {
-            if (sfItem.getID().startsWith("CARGO_NODE_")) {
+            if (sfItem.getId().startsWith("CARGO_NODE_")) {
             
                 String frequency = BlockStorage.getLocationInfo(b.getLocation(), "frequency");
                 if (frequency != null) {
@@ -159,7 +156,7 @@ public class CrescentHammer extends SimpleSlimefunItem<ItemInteractHandler> impl
                     }
                     
                     BlockMenu menu = BlockStorage.getInventory(b);
-                    int slotCurrent = slotCurrents.get(sfItem.getID());
+                    int slotCurrent = slotCurrents.get(sfItem.getId());
                     
                     if (current == 16) { 
                         menu.replaceExistingItem(
@@ -187,7 +184,7 @@ public class CrescentHammer extends SimpleSlimefunItem<ItemInteractHandler> impl
         SlimefunItem sfItem = BlockStorage.check(b);
         if (sfItem != null) {
             if (sfItem instanceof EnergyNetComponent || sfItem instanceof EnergyRegulator ||
-                sfItem.getID().startsWith("CARGO_NODE") || sfItem instanceof CargoManager ||
+                sfItem.getId().startsWith("CARGO_NODE") || sfItem instanceof CargoManager ||
                 sfItem instanceof ReactorAccessPort || sfItem instanceof TrashCan) {
             
                 BlockBreakEvent event = new BlockBreakEvent(b, p);
@@ -232,7 +229,7 @@ public class CrescentHammer extends SimpleSlimefunItem<ItemInteractHandler> impl
                     if (b.getType() == Material.PLAYER_WALL_HEAD) {
                         SlimefunItem sfItem = BlockStorage.check(b);
                         if (sfItem != null) {
-                            if (sfItem.getID().startsWith("CARGO_NODE")) {
+                            if (sfItem.getId().startsWith("CARGO_NODE")) {
                                 SlimefunPlugin.getNetworkManager().updateAllNetworks(b.getLocation());
                             }
                         }
@@ -245,22 +242,17 @@ public class CrescentHammer extends SimpleSlimefunItem<ItemInteractHandler> impl
     }
     
     private @NotNull BlockBreakHandler getBlockBreakHandler() {
-        return new BlockBreakHandler() {
+        return new BlockBreakHandler(false, false) {
         
-            @Override
-            public boolean onBlockBreak(BlockBreakEvent e, ItemStack item, int fortune, List<ItemStack> drops) {
-                if (isItem(item)) {
-                    e.setCancelled(true);
-                    e.getPlayer().sendMessage(Messages.CRESCENTHAMMER_BLOCKBREAKING.getMessage());
-                    return true;
-                }
-                return false;
-            }
-            
             @Override
             public boolean isPrivate() {
                 return false;
             }
+
+			@Override
+			public void onPlayerBreak(BlockBreakEvent e, ItemStack item, List<ItemStack> drops) {
+				
+			}
         };
     }
     

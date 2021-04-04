@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 
-import org.bstats.bukkit.Metrics;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.Configuration;
@@ -14,6 +13,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import io.github.linoxgh.moretools.items.CargoCopier;
 import io.github.linoxgh.moretools.items.CrescentHammer;
+import io.github.linoxgh.moretools.items.NotNull;
 import io.github.linoxgh.moretools.listeners.PlayerListener;
 import io.github.thebusybiscuit.slimefun4.api.SlimefunAddon;
 import io.github.thebusybiscuit.slimefun4.core.researching.Research;
