@@ -18,26 +18,27 @@ import org.bukkit.inventory.ItemStack;
 import io.github.linoxgh.moretools.Messages;
 import io.github.linoxgh.moretools.MoreTools;
 import io.github.linoxgh.moretools.handlers.ItemInteractHandler;
+
+import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
+import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
+import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
+import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.slimefun4.core.attributes.DamageableItem;
 import io.github.thebusybiscuit.slimefun4.core.attributes.EnergyNetComponent;
-import io.github.thebusybiscuit.slimefun4.core.handlers.BlockBreakHandler;
-import io.github.thebusybiscuit.slimefun4.implementation.SlimefunPlugin;
+import io.github.thebusybiscuit.slimefun4.core.handlers.ToolUseHandler;
 import io.github.thebusybiscuit.slimefun4.implementation.items.SimpleSlimefunItem;
 import io.github.thebusybiscuit.slimefun4.implementation.items.cargo.CargoManager;
 import io.github.thebusybiscuit.slimefun4.implementation.items.cargo.ReactorAccessPort;
 import io.github.thebusybiscuit.slimefun4.implementation.items.cargo.TrashCan;
 import io.github.thebusybiscuit.slimefun4.implementation.items.electric.EnergyRegulator;
+import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
+import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
+import io.github.thebusybiscuit.slimefun4.libraries.dough.protection.Interaction;
 import io.github.thebusybiscuit.slimefun4.utils.ChestMenuUtils;
 import io.github.thebusybiscuit.slimefun4.utils.ColoredMaterial;
 import io.github.thebusybiscuit.slimefun4.utils.HeadTexture;
-import me.mrCookieSlime.Slimefun.Lists.RecipeType;
-import me.mrCookieSlime.Slimefun.Objects.Category;
-import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SlimefunItem;
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
-import me.mrCookieSlime.Slimefun.api.SlimefunItemStack;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
-import me.mrCookieSlime.Slimefun.cscorelib2.item.CustomItem;
-import me.mrCookieSlime.Slimefun.cscorelib2.protection.ProtectableAction;
 
 /**
  * A {@link CrescentHammer} is a {@link SlimefunItem} which allows you to dismantle placed machine blocks
@@ -51,7 +52,7 @@ import me.mrCookieSlime.Slimefun.cscorelib2.protection.ProtectableAction;
  */
 public class CrescentHammer extends SimpleSlimefunItem<ItemInteractHandler> implements DamageableItem {
 
-    private final boolean isChestTerminalInstalled = SlimefunPlugin.getIntegrations().isChestTerminalInstalled();
+    private final boolean isChestTerminalInstalled = Slimefun.getIntegrations().isChestTerminalInstalled();
     
     private final boolean damageable;
     private final boolean rotationEnabled;
@@ -63,8 +64,8 @@ public class CrescentHammer extends SimpleSlimefunItem<ItemInteractHandler> impl
     private final HashMap<UUID, Long> lastUses = new HashMap<>();
     private final HashMap<String, Integer> slotCurrents = new HashMap<>();
 
-    public CrescentHammer(@NotNull Category category, @NotNull SlimefunItemStack item, @NotNull RecipeType recipeType, ItemStack[] recipe) {
-        super(category, item, recipeType, recipe);
+    public CrescentHammer(ItemGroup itemGroup, SlimefunItemStack item, RecipeType recipeType, ItemStack[] recipe) {
+        super(itemGroup, item, recipeType, recipe);
         
         FileConfiguration cfg = MoreTools.getInstance().getConfig();
         
@@ -83,8 +84,7 @@ public class CrescentHammer extends SimpleSlimefunItem<ItemInteractHandler> impl
     @Override
     public @NotNull ItemInteractHandler getItemHandler() {
         return (e, sfItem) -> {
-            ItemStack item = e.getItem();
-            if (!sfItem.getId().equals(getId()) || item == null) {
+            if (!sfItem.getId().equals(getId())) {
                 return;
             }
             e.setCancelled(true);
@@ -92,7 +92,7 @@ public class CrescentHammer extends SimpleSlimefunItem<ItemInteractHandler> impl
             Block b = e.getClickedBlock();
             if (b != null) {
                 Player p = e.getPlayer();
-                if (SlimefunPlugin.getProtectionManager().hasPermission(p, b.getLocation(), ProtectableAction.BREAK_BLOCK)) {
+                if (Slimefun.getProtectionManager().hasPermission(p, b.getLocation(), Interaction.BREAK_BLOCK)) {
                     
                     Long lastUse = lastUses.get(p.getUniqueId()); 
                     if (lastUse != null) {
@@ -161,12 +161,12 @@ public class CrescentHammer extends SimpleSlimefunItem<ItemInteractHandler> impl
                     if (current == 16) { 
                         menu.replaceExistingItem(
                             slotCurrent, 
-                            new CustomItem(HeadTexture.CHEST_TERMINAL.getAsItemStack(), "&bChannel ID: &3" + (current + 1))
+                            new CustomItemStack(HeadTexture.CHEST_TERMINAL.getAsItemStack(), "&bChannel ID: &3" + (current + 1))
                         );
                     } else { 
                         menu.replaceExistingItem(
                             slotCurrent, 
-                            new CustomItem(ColoredMaterial.WOOL.get(current), "&bChannel ID: &3" + (current + 1))
+                            new CustomItemStack(ColoredMaterial.WOOL.get(current), "&bChannel ID: &3" + (current + 1))
                         );
                     }
                     menu.addMenuClickHandler(slotCurrent, ChestMenuUtils.getEmptyClickHandler());
@@ -230,7 +230,7 @@ public class CrescentHammer extends SimpleSlimefunItem<ItemInteractHandler> impl
                         SlimefunItem sfItem = BlockStorage.check(b);
                         if (sfItem != null) {
                             if (sfItem.getId().startsWith("CARGO_NODE")) {
-                                SlimefunPlugin.getNetworkManager().updateAllNetworks(b.getLocation());
+                                Slimefun.getNetworkManager().updateAllNetworks(b.getLocation());
                             }
                         }
                     }
@@ -241,12 +241,11 @@ public class CrescentHammer extends SimpleSlimefunItem<ItemInteractHandler> impl
         p.sendMessage(Messages.CRESCENTHAMMER_ROTATEFAIL.getMessage());
     }
     
-    private @NotNull BlockBreakHandler getBlockBreakHandler() {
-        return new BlockBreakHandler(false, false) {
-        
-            @Override
-            public boolean isPrivate() {
-                return false;
+    private ToolUseHandler getToolUseHandler() {
+        return (e, item, i, list) -> {
+            if (isItem(item)) {
+                e.setCancelled(true);
+                e.getPlayer().sendMessage(Messages.CRESCENTHAMMER_BLOCKBREAKING.getMessage());
             }
 
 			@Override
@@ -259,7 +258,7 @@ public class CrescentHammer extends SimpleSlimefunItem<ItemInteractHandler> impl
     @Override
     public void preRegister() {
         super.preRegister();
-        addItemHandler(getBlockBreakHandler());
+        addItemHandler(getToolUseHandler());
     }
     
     @Override
