@@ -14,20 +14,19 @@ public class Items {
     private static final FileConfiguration cfg = MoreTools.getInstance().getConfig();
     
     // TOOLS
-    public static final SlimefunItemStack CRESCENT_HAMMER = new SlimefunItemStack("CRESCENT_HAMMER", Material.IRON_HOE, "&bCrescent Hammer", "&7&oActually this is a wrench, really.", "", "&eLeft Click &7> Dismantles the machine.");
-    public static final SlimefunItemStack CARGO_COPIER = new SlimefunItemStack("CARGO_COPIER", Material.MAP, "&bCargo Copier", "", "&eLeft Click &7> Copies the settings of the interacted cargo node.", "&eRight Click &7> Saves the settings to the interacted cargo node.");
-
+    public static final SlimefunItemStack CRESCENT_HAMMER = new SlimefunItemStack("CRESCENT_HAMMER", Material.IRON_HOE, "&b新月锤", "&7&o其实这只是一个扳手.", "", "&e左键单击 &7> 快速拆卸机器.");
+    
     static {
         ItemMeta meta = CRESCENT_HAMMER.getItemMeta();
         List<String> lore = meta.getLore();
         
         if (cfg.getBoolean("item-settings.crescent-hammer.features.enable-rotation")) {
-            lore.add(3, ChatColor.YELLOW + "Right Click" + ChatColor.GRAY + " > Rotates the block, if it's rotatable.");
+            lore.add(3, ChatColor.YELLOW + "右键单击" + ChatColor.GRAY + " > 旋转可旋转的方块.");
         }
         
         if (cfg.getBoolean("item-settings.crescent-hammer.features.enable-channel-change")) {
-            lore.add(4, ChatColor.YELLOW + "Shift + Left Click" + ChatColor.GRAY + " > Increases the channel of a cargo node.");
-            lore.add(5, ChatColor.YELLOW + "Shift + Right Click" + ChatColor.GRAY + " > Decreases the channel of a cargo node.");
+            lore.add(4, ChatColor.YELLOW + "蹲下 + 左键" + ChatColor.GRAY + " > 增加货物节点的信道.");
+            lore.add(5, ChatColor.YELLOW + "蹲下 + 右键" + ChatColor.GRAY + " > 减少货物节点的信道.");
         }
         
         meta.setLore(lore);

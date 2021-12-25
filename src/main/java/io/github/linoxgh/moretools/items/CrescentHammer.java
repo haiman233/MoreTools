@@ -82,7 +82,7 @@ public class CrescentHammer extends SimpleSlimefunItem<ItemInteractHandler> impl
     }
     
     @Override
-    public @NotNull ItemInteractHandler getItemHandler() {
+    public ItemInteractHandler getItemHandler() {
         return (e, sfItem) -> {
             if (!sfItem.getId().equals(getId())) {
                 return;
@@ -120,7 +120,7 @@ public class CrescentHammer extends SimpleSlimefunItem<ItemInteractHandler> impl
                             if (p.isSneaking()) {
                                 alterChannel(b, p, 1);
                             } else {
-                                dismantleBlock(b, p, item);
+                                dismantleBlock(b, p, e.getItem());
                             }
                             break;
                         
@@ -129,10 +129,11 @@ public class CrescentHammer extends SimpleSlimefunItem<ItemInteractHandler> impl
                     }
                 }
             }
+            e.setCancelled(true);
         };
     }
     
-    private void alterChannel(@NotNull Block b, @NotNull Player p, int change) {
+    private void alterChannel(Block b, Player p, int change) {
     
         if (!channelChangeEnabled) {
             return;
@@ -161,12 +162,12 @@ public class CrescentHammer extends SimpleSlimefunItem<ItemInteractHandler> impl
                     if (current == 16) { 
                         menu.replaceExistingItem(
                             slotCurrent, 
-                            new CustomItemStack(HeadTexture.CHEST_TERMINAL.getAsItemStack(), "&bChannel ID: &3" + (current + 1))
+                            new CustomItemStack(HeadTexture.CHEST_TERMINAL.getAsItemStack(), "&b信道 ID: &3" + (current + 1))
                         );
                     } else { 
                         menu.replaceExistingItem(
                             slotCurrent, 
-                            new CustomItemStack(ColoredMaterial.WOOL.get(current), "&bChannel ID: &3" + (current + 1))
+                            new CustomItemStack(ColoredMaterial.WOOL.get(current), "&b信道 ID: &3" + (current + 1))
                         );
                     }
                     menu.addMenuClickHandler(slotCurrent, ChestMenuUtils.getEmptyClickHandler());
@@ -180,7 +181,7 @@ public class CrescentHammer extends SimpleSlimefunItem<ItemInteractHandler> impl
         p.sendMessage(Messages.CRESCENTHAMMER_CHANNELCHANGEFAIL.getMessage());
     }
     
-    private void dismantleBlock(@NotNull Block b, @NotNull Player p, @NotNull ItemStack item) {
+    private void dismantleBlock(Block b, Player p, ItemStack item) {
         SlimefunItem sfItem = BlockStorage.check(b);
         if (sfItem != null) {
             if (sfItem instanceof EnergyNetComponent || sfItem instanceof EnergyRegulator ||
@@ -202,7 +203,7 @@ public class CrescentHammer extends SimpleSlimefunItem<ItemInteractHandler> impl
         p.sendMessage(Messages.CRESCENTHAMMER_DISMANTLEFAIL.getMessage());
     }
     
-    private void rotateBlock(@NotNull Block b, @NotNull Player p) {
+    private void rotateBlock(Block b, Player p) {
     
         if (!rotationEnabled) {
             return;
@@ -247,11 +248,6 @@ public class CrescentHammer extends SimpleSlimefunItem<ItemInteractHandler> impl
                 e.setCancelled(true);
                 e.getPlayer().sendMessage(Messages.CRESCENTHAMMER_BLOCKBREAKING.getMessage());
             }
-
-			@Override
-			public void onPlayerBreak(BlockBreakEvent e, ItemStack item, List<ItemStack> drops) {
-				
-			}
         };
     }
     
