@@ -129,7 +129,7 @@ public class MoreTools extends JavaPlugin implements SlimefunAddon {
     public String getBugTrackerURL() {
         return "https://github.com/LinoxGH/MoreTools/issues";
     }
-
+ 
     @Override
     public JavaPlugin getJavaPlugin() {
         return this;
