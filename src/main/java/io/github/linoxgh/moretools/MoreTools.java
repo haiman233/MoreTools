@@ -93,7 +93,7 @@ public class MoreTools extends JavaPlugin implements SlimefunAddon {
     private void setupCategories() {
         if (debug) getLogger().log(Level.INFO, "设置分类...");
         
-        moreToolsItemGroup = new ItemGroup(new NamespacedKey(this, "more_tools_category"), new CustomItemStack(Items.CRESCENT_HAMMER, "&3More Tools"), 4);
+        moreToolsItemGroup = new ItemGroup(new NamespacedKey(this, "more_tools_category"), new CustomItemStack(Items.CRESCENT_HAMMER, "&3更多工具"), 4);
     }
     
     private void setupItems() {
